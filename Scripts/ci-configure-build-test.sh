@@ -47,7 +47,6 @@ fi
 
 
 if [ ! "$backend" == CUDA ]; then
-  BEGIN_SOLUTION_EXERCISES+=(tasking) # tasking doesn't seem to work on CUDA
   BEGIN_SOLUTION_EXERCISES+=(virtualfunction) # TODO: virtualfunction needs Kokkos with CUDA RDC
 fi
 

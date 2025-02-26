@@ -65,26 +65,8 @@ int main( int argc, char* argv[] )
   Kokkos::initialize( argc, argv );
   {
 
-  #ifdef KOKKOS_ENABLE_CUDA
-  #define MemSpace Kokkos::CudaSpace
-  #define ExecSpace Kokkos::Cuda
-  #endif
-  #ifdef KOKKOS_ENABLE_HIP
-  #define MemSpace Kokkos::HIPSpace
-  #define ExecSpace Kokkos::HIP
-  #endif
-  #ifdef KOKKOS_ENABLE_THREADS
-  #define MemSpace Kokkos::HostSpace
-  #define ExecSpace Kokkos::Threads
-  #endif 
-
-  #ifndef MemSpace
-  #define MemSpace Kokkos::HostSpace
-  #endif
-
-  #ifndef ExecSpace
-  #define ExecSpace Kokkos::Serial
-  #endif
+  using ExecSpace = Kokkos::DefaultExecutionSpace;
+  using MemSpace = ExecSpace::memory_space;
 
   // using Layout = Kokkos::LayoutLeft;
   using Layout = Kokkos::LayoutRight;
@@ -155,7 +137,6 @@ int main( int argc, char* argv[] )
       printf( "  Error: result( %lf ) != solution( %lf )\n", result, solution );
     }
   }
-
 
   // Calculate time.
   double time = timer.seconds();

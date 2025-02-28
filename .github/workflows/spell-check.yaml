@@ -1,0 +1,49 @@
+name: Spell Check LaTeX files
+
+on:
+  push:
+  pull_request:
+    branches: [ "silde-update" ]
+    paths:
+      - ".github/workflows/spell-check.yaml"
+      - "Content/**"
+      - "README.md"  
+
+jobs:
+  Lint_latex:
+    strategy:
+      matrix:
+        latex-files:
+          - KokkosTutorial_01_Introduction.tex
+          - KokkosTutorial_02_ViewsAndSpaces.tex 
+          - KokkosTutorial_03_MDRangeMoreViews.tex
+          - KokkosTutorial_04_HierarchicalParallelism.tex
+          - KokkosTutorial_05_SIMDStreamsTasking.tex
+          - KokkosTutorial_06_InternodeMPIandPGAS.tex
+          - KokkosTutorial_07_Tools.tex
+          - KokkosTutorial_08_KokkosKernels.tex
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v4
+    
+    - name: Lint LaTeX document
+      uses: ChiefGokhlayeh/textidote-action@v5
+      id: lint
+      with:
+        working_directory: Content/Presentations/modularized
+        root_file: ${{ matrix.latex-files }} 
+        report_file: ${{ matrix.latex-files }}_report.html
+
+  Upload_TeXtidote_report:
+    if : ${{ always() }}
+    needs: Lint_latex
+    runs-on: ubuntu-latest
+    steps:
+    - name: Upload TeXtidote report
+      uses: actions/upload-artifact@v4.6.1
+      with:
+        name: TeXtidote_report
+        path: Content/Presentations/modularized/*_report.html
+

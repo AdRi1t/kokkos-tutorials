@@ -1,14 +1,12 @@
 name: Generate slides from source
 
 on:
-  workflow_dispatch:
   push:
     branches: [ "main" ]
   pull_request:
     paths:
       - 'Content/Presentations/**'
       - 'Content/ReleaseBriefings/**'
-      - '.github/workflows/generate-slides.yaml'
 
 jobs:
   build:
@@ -22,6 +20,7 @@ jobs:
         sudo apt-get install -y --no-install-recommends
         make
         latexmk
+        lmodern
         texlive
         texlive-latex-extra
         texlive-plain-generic
@@ -43,7 +42,7 @@ jobs:
         make 
 
     - name: Upload Presentations PDFs as artifacts
-      if: ${{ steps.filter.outputs.presentations == 'true' }}"
+      if: ${{ steps.filter.outputs.presentations == 'true' }}
       uses: actions/upload-artifact@v4.6.1
       with:
         name: PresentationsSlides
